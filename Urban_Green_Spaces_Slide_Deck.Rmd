@@ -1,0 +1,178 @@
+---
+title: '**Urban Greenspaces**'
+author: '**Erica Criollo**'
+date: "April 9, 2025"
+output:
+  ioslides_presentation: default
+  beamer_presentation: default
+  slidy_presentation: default
+institute: ec1737a@american.edu
+theme: Boadilla
+colortheme: spruce
+fontsize: 10pt
+---
+
+```{r setup, include=FALSE} 
+
+## Set Up Chunk
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.align = 'center'
+  )
+
+## Packages
+
+library(tidyverse)
+library(knitr)
+library(readr)
+library(dplyr)
+library(ggplot2)
+
+## Loading Data
+
+greenspace_data_share <- read_csv("dataverse_files/greenspace_data_share.csv")
+#View(greenspace_data_share)
+
+# Cleaning the Dataset
+
+ndvi_summary <- greenspace_data_share %>%
+  drop_na(peak_weight_2021) %>%
+  group_by(Country) %>%
+  summarise(avg_peak_ndvi = mean(peak_weight_2021, na.rm = TRUE)) %>%
+  arrange(desc(avg_peak_ndvi))
+
+```
+
+## Overview
+
+Urban green spaces are known for improving conditions in urban cities by reducing air pollution, and promoting the overall well-being of city dweller's mental and physical health. 
+
+The following analysis investigates the relationship between urban greenspaces and Human Development Index (HDI) levels, exploring the question if more developed countries have more urban greenspaces.
+
+**Results**
+
+- Differences between countries NDVI and HDI levels
+- Cities with higher HDI levels tend to have more urban greenspaces
+
+## Data
+
+
+The Global Greenspace Indicator Dataset by Jennifer Stowell from Boston University is a global dataset that tracks how much greenspace exists in over 1,000 cities around the world from 2010 to 2021.It includes both absolute and population-weighted peak and annual NDVI (Normalized Difference Vegetation Index) values.This is a satellite-based indicator of how green an area is.
+
+
+- NDVI values range from 0 to 1
+- Higher values = more vegetation
+```{r, fig.width=4, fig.height=1.8}
+
+top_bottom_countries <- bind_rows(
+  ndvi_summary %>% slice_max(avg_peak_ndvi, n = 5),
+  ndvi_summary %>% slice_min(avg_peak_ndvi, n = 5)
+)
+ggplot(top_bottom_countries, aes(x = reorder(Country, avg_peak_ndvi), y = avg_peak_ndvi, fill = avg_peak_ndvi)) +
+  geom_col() +
+  coord_flip() +
+  scale_fill_gradient(low = "#a1d99b", high = "#006d2c") +
+  labs(
+    title = "Top and Bottom Countries by NDVI (2021)",
+    x = "Country",
+    y = "Avg Peak NDVI"
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(
+    plot.title = element_text(size = 9, face = "bold", hjust = 0.5),
+    legend.position = "none"
+  )
+
+```
+
+## Urban Greenspace by HDI Level
+
+- Population weighted annual maximum NDVI and HDI from 2021.
+- Kruskal-Wallis test shows there is a strong correlation betwee **NDVI rate and HDI level** 
+
+```{=latex}
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+```
+
+```{r, echo=FALSE, fig.width=3, fig.height=2.5, out.width='100%'}
+
+greenspace_data_share$HDI_level <- factor(
+  greenspace_data_share$HDI_level,
+  levels = c("Low", "Medium", "High", "Very high")
+)
+
+green_palette <- c("Low" = "#a1d99b", 
+                   "Medium" = "#31a354", 
+                   "High" = "#74c476",
+                   "Very high" = "#006d2c")
+
+ggplot(greenspace_data_share, aes(x = HDI_level, y = peak_weight_2021, fill = HDI_level)) +
+  geom_boxplot() +
+  scale_fill_manual(values = green_palette) +
+  labs(
+    title = "Urban Greenspace by HDI Level",
+    x = "HDI Level",
+    y = "Peak NDVI (2021)"
+  ) +
+  theme_minimal(base_size = 9) +
+  theme(legend.position = "none", plot.title = element_text(face = "bold"))
+
+```
+
+```{=latex}
+  \end{column}
+  \begin{column}{0.5\textwidth}
+```
+
+```{r, echo=FALSE, results='asis'}
+kw <- kruskal.test(peak_weight_2021 ~ HDI_level, data = greenspace_data_share)
+
+cat("**Kruskal-Wallis Test Results**  \n")
+cat("Chi-squared: ", round(kw$statistic, 2), "  \n")
+cat("df: ", kw$parameter, "  \n")
+cat("p-value: ", format.pval(kw$p.value, digits = 3), "  \n")
+```
+
+```{=latex}
+  \end{column}
+\end{columns}
+```
+
+
+## Comparison By Region of the world
+
+In analyzing urban greenspaces (NDVI) for different geographical regions, it is clear that Europe and North America have the highest NDVI level.
+
+```{r, fig.width=4, fig.height=1.8}
+
+
+green_palette <- c("Europe" = "#006d2c",
+                   "Latin America and the Caribbean" = "#74c476", 
+                   "Asia" = "#31a354", 
+                   "Oceania" = "#006d2c",
+                   "Northern America" = "#006d2c",
+                   "Africa" = "#a1d99b")            
+
+
+# Boxplot for Urban Greenspace by Major Geo Region with the updated green palette
+ggplot(greenspace_data_share, aes(x = Major_Geo_Region, y = peak_weight_2021, fill = Major_Geo_Region)) + 
+  geom_boxplot() + 
+  scale_fill_manual(values = green_palette) +
+  scale_x_discrete(labels = function(x) ifelse(x == "Latin America and the Caribbean", "LAC", ifelse(x == "Northern America", "North America", x))) +
+  labs(
+    title = "Urban Greenspace by Major Geo Region (2021)", 
+    x = "Major Geo Region", 
+    y = "Peak NDVI (2021)"
+  ) + 
+  theme_minimal(base_size = 9) +  
+  theme(
+    plot.title = element_text(size = 9, face = "bold", hjust = 0.5),
+    legend.position = "none"  
+  )
+
+greenspace_data_share$Major_Geo_Region <- factor(greenspace_data_share$Major_Geo_Region, levels = c("Africa", "LAC", "Asia", "Oceania", "Northern America","Europe"))
+```
+
