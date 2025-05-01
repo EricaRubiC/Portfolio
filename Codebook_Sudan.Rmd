@@ -1,0 +1,848 @@
+---
+title: 'Codebook: Returnee Integration to South Sudan and Educational Attainment for Girls'
+author: "Erica Criollo"
+date: "2025-04-21"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  fig.align = 'center',
+  message = FALSE,
+  warning = FALSE
+  )
+
+# Loading packages and importing data
+
+library(tidyverse)
+library(haven)
+library(readxl)
+library(dplyr)
+library(knitr)
+
+df_Sudan <- readr::read_csv("df_Sudan.csv")
+
+```
+
+## Overview of Data
+
+The Sudan Crisis – Returnee Reintegration & Perceptions Survey was conducted by the International Organization for Migration (IOM) from March 7 to 14, 2024, via phone interviews with South Sudanese returnees from Sudan. Respondents had received transportation assistance from IOM, in coordination with the Government of South Sudan, and were returning to one of four key states: Upper Nile, Unity, Central Equatoria, or Northern Bahr el Ghazal.  (*<https://dtm.iom.int/datasets/sudan-crisis-returnee-reintegration-perceptions-survey-march-7-14-2024>*)
+
+The survey captured returnees’ experiences with reintegration, focusing on access to services like housing, food, healthcare, education, and their perceptions of safety and livelihoods. The data provides valuable insights into early resettlement challenges and available support systems.
+
+For this codebook, the data was refined into a specialized dataset that features the experiences of girls and the risks they face during reintegration. It highlights areas such as education access and protection risks aiming to guide child-sensitive programs and policies.
+
+Variables include indicators related to food and water access, school enrollment, and gender-specific vulnerabilities, which offers insights into educational outcomes and the likelihood of continued education for girls.
+
+## Sources and Methodology
+
+The data used in this analysis comes from the *Sudan Crisis – Returnee Reintegration & Perceptions Survey*, conducted by the International Organization for Migration (IOM) between March 7–14, 2024. This original dataset has **159 observations and 303 variables**.
+
+The original dataset from the IOM Sudan Crisis – Returnee Reintegration & Perceptions Survey was filtered to focus on variables relevant to returnee demographics, child well-being, education, and safety. It is important to note that the age of the respondent was not kept due to the original survey's lack of data having one vague age rage of 15-59 category for only ten respondents. Therefore, this demographic variable could not be utilized. To avoid confusion, the respondents of the survey are not young girls but rather head of household and family members (which could include young girls over 15 years old) and their perspectives. 
+
+Data cleaning steps included:
+
+- Renaming variables to tidy, readable formats without spaces
+- Dropping additional irrelevant or duplicate columns
+- Converting key variables—such as number of children and gender—into appropriate numeric formats for analysis
+- Re-coding several variables from survey questions that had multiple answers for clarity
+
+This refined dataset, `df_Sudan`, is now structured to support analysis of child-related vulnerabilities, with a focus on girls and education outcomes during reintegration. The cleaned dataset has **159 observations and 47 variables.**
+
+### Citation
+
+- International Organization for Migration (IOM). (2024, March 22). *DTM Sudan Crisis – Returnee Reintegration & Perceptions Survey (March 7–14, 2024)*. IOM South Sudan. (https://dtm.iom.int/datasets/sudan-crisis-returnee-reintegration-perceptions-survey-march-7-14-2024)
+
+## Variable Description
+
+### State Code
+- **Variable Name:** `admin1_pcode`
+- **Type:** Character
+- **Description:** Administrative level 1 code (state) of current location in South Sudan.
+
+### County Code
+- **Variable Name:** `admin2_pcode`
+- **Type:** Chracter
+- **Description:** Administrative level 2 code (county) of current location in South Sudan.
+
+### IOM Month of Registration
+- **Variable Name:** `month_registered_iom_ota`
+- **Type:** Character
+- **Description:** Month when the returnee was registered by IOM for onward transportation assistance.
+
+### Respondent gender
+- **Variable Name:** `gender_respondent`
+- **Type:** Numeric (0 = Male, 1 = Female)
+- **Description:** Gender of the survey respondent.
+
+```{r}
+
+gender_freq <- df_Sudan %>%
+  count(gender_respondent) %>%
+  mutate(
+    value = gender_respondent, 
+    label = case_when(
+      gender_respondent == 0 ~ "Male",
+      gender_respondent == 1 ~ "Female",
+    ),
+    frequency = n
+  ) %>%
+  select(Value = value, Label = label, Freq = frequency) 
+
+gender_freq %>%
+  kable(format = "markdown")
+```
+
+### Education Level
+- **Variable Name:** `education`
+- **Type:** Numeric
+- **Description:** Highest level of education attained by the respondent.
+```{r}
+
+edu_freq <- df_Sudan %>% 
+  count(education) %>% 
+  mutate(
+    label = case_when(
+      education == 0 ~ "No formal schooling",
+      education == 1 ~ "Started but did not complete primary school",
+      education == 2 ~ "Finished primary school, but did not start secondary school",
+      education == 3 ~ "Started but did not complete secondary school",
+      education == 4 ~ "Finished secondary school",
+      education == 5 ~ "University",
+      TRUE ~ "Unknown"
+    ),
+    frequency = n
+  ) %>%
+  select(Label = label, Freq = frequency) 
+
+edu_freq %>% 
+  kable(format = "markdown")
+
+```
+
+### State of origin (South Sudan)
+- **Variable Name:** `origin_state_ss`
+- **Type:** Character
+- **Description:** Returnee’s state of origin in South Sudan.
+
+### County of origin (South Sudan)
+- **Variable Name:** `origin_county_ss`
+- **Type:** Character
+- **Description:** Returnee’s county of origin in South Sudan.
+
+### Payam of origin (South Sudan)
+- **Variable Name:** `origin_payam_ss`
+- **Type:** Character
+- **Description:** Returnee’s payam (sub-county) of origin in South Sudan.
+
+### State of residence before return (Sudan)
+- **Variable Name:** `residence_state_sudan`
+- **Type:** Character
+- **Description:** State where the respondent lived in Sudan before returning to South Sudan.
+
+### County of residence before return (Sudan)
+- **Variable Name:** `residence_county_sudan`
+- **Type:** Character
+- **Description:** County where the respondent lived in Sudan before returning.
+
+### Current state of residence (South Sudan)
+- **Variable Name:** `current_state_ss`
+- **Type:** Character
+- **Description:** Respondent’s current state of residence in South Sudan.
+
+### Current county of residence (South Sudan)
+- **Variable Name:** `current_county_ss`
+- **Type:** Character
+- **Description:** Respondent’s current county of residence in South Sudan.
+
+### Current payam of residence (South Sudan)
+- **Variable Name:** `current_payam_ss`
+- **Type:** Character
+- **Description:** Respondent’s current payam (sub-county) in South Sudan.
+
+### Distance to Nearest Market
+- **Variable Name:** `distance_market`
+- **Type:** Factor
+- **Description:** Distance to the nearest market from current location.
+
+```{r}
+
+distance_freq <- df_Sudan %>% 
+  count(distance_market) %>% 
+  mutate(
+    label = case_when(
+      distance_market == 1 ~ "0-15 minutes",
+      distance_market == 2 ~ "15-30 minutes",
+      distance_market == 3 ~ "30-45 minutes",
+      distance_market == 4 ~ "45 min-1 hour",
+      distance_market == 5 ~ "1-2 hours",
+      distance_market == 6 ~ "more than 2 hours",
+      TRUE ~ "Unknown"
+    ),
+    frequency = n
+  ) %>%
+  select(Value = distance_market, Label = label, Freq = frequency) 
+
+distance_freq %>% 
+  kable(format = "markdown")
+
+
+```
+
+### Meals Per Day
+- **Variable Name:** `meals_daily`
+- **Type:** Factor
+- **Description:** Number of meals eaten per day reported by the household.
+
+```{r}
+
+meals_freq <- df_Sudan %>% 
+  count(meals_daily) %>% 
+  mutate(
+    label = case_when(
+      meals_daily == NA ~ "I choose not to answer",
+      meals_daily == 0 ~ "Less than one meal per day",
+      meals_daily == 1 ~ "One",
+      meals_daily == 2 ~ "Two",
+      meals_daily == 3 ~ "Three or more",
+    ),
+    frequency = n
+  ) %>%
+  select(Value = meals_daily, Label = label, Freq = frequency) 
+
+meals_freq %>%
+  kable(format = "markdown")
+
+```
+
+### Access to Water
+- **Variable Name:** `water_access_num`
+- **Type:** Numeric
+- **Description:** Availability or ease of access to water in the current location.
+
+```{r}
+
+water_freq <- df_Sudan %>% 
+  count(water_access_num) %>% 
+  mutate(
+    label = case_when(
+      water_access_num == 1 ~ "Yes",
+      water_access_num == 2 ~ "No",
+      water_access_num == 3 ~ "Sometimes/inconsistently",
+      TRUE ~ "Unknown"
+    ),
+    frequency = n
+  ) %>% 
+  select(Value = water_access_num, Label = label, Freq = frequency)
+
+water_freq %>% 
+  kable(format = "markdown")
+
+```
+
+### Number of Children in Household
+- **Variable Name:** `num_children`
+- **Type:** Numeric
+- **Description:** Total number of children in the respondent’s household.
+
+```{r}
+
+child_freq <- df_Sudan %>%
+  count(num_children) %>%
+  rename(Freq = n)
+
+child_freq %>%
+  kable(format = "markdown")
+
+```
+
+### Number of Boys Traveling
+- **Variable Name:** `boys_under_18`
+- **Type:** Numeric
+- **Description:** Total number of boys under 18 that family members traveled with.
+
+```{r}
+
+boys_freq <- df_Sudan %>%
+  count(boys_under_18) %>%
+  rename(Freq = n)
+
+boys_freq %>%
+  kable(format = "markdown")
+
+```
+
+### Number of Girls Traveling
+- **Variable Name:** `girls_under_18`
+- **Type:** Numeric
+- **Description:** Total number of girls under 18 that family members traveled with.
+
+```{r}
+
+girls_freq <- df_Sudan %>%
+  count(girls_under_18) %>%
+  rename(Freq = n)
+
+girls_freq %>%
+  kable(format = "markdown")
+
+```
+
+### Perception of Safety Upon Return
+- **Variable Name:** `safety_ss`
+- **Type:** Factor
+- **Description:** Respondent’s perception of safety in their current location in South Sudan.
+
+```{r}
+
+safety_freq <- df_Sudan %>% 
+  count(safety_ss) %>% 
+  mutate(
+    label = case_when(
+      safety_ss == NA ~ "I choose not to answer",
+      safety_ss == 1 ~ "Very unsafe",
+      safety_ss == 2 ~ "Unsafe",
+      safety_ss == 3 ~ "Neither safe nor unsafe",
+      safety_ss == 4 ~ "Somewhat safe",
+      safety_ss == 5 ~ "Very safe",
+    ),
+    frequency = n
+  ) %>%
+  select(Value = safety_ss, Label = label, Freq = frequency) 
+
+safety_freq %>% 
+  kable(format = "markdown")
+
+```
+
+### Reasons Location Feels Unsafe
+- **Variable Name:** `reasons_unsafe`
+- **Type:** Character
+- **Description:** Specific reasons given by the respondent for feeling unsafe.
+
+```{r}
+
+df_Sudan %>%
+  count(reasons_unsafe) %>%
+  arrange(desc(n)) %>%
+  rename(Label = reasons_unsafe, Freq = n) %>%
+  kable(format = "markdown")
+
+```
+
+### School Attendance in Sudan
+- **Variable Name:** child_school_sudan
+- **Type:** Numeric
+- **Description:** Whether the children in the household attended school while in Sudan.
+
+```{r}
+
+school_sudan_freq <- df_Sudan %>% 
+  count(child_school_sudan) %>% 
+  mutate(
+    label = case_when(
+      child_school_sudan == 1 ~ "Yes",
+      child_school_sudan == 2 ~ "No",
+      child_school_sudan == 3 ~ "Some of them, but not all",
+      child_school_sudan == 4 ~ "I don’t have school-aged children",
+      TRUE ~ "Unknown"
+    ),
+    frequency = n
+  ) %>%
+  select(Value = child_school_sudan, Label = label, Freq = frequency)
+
+school_sudan_freq %>% 
+  kable(format = "markdown")
+
+```
+
+### Protection Risks for Children
+- **Variable Name:** `risks_children`
+- **Type:** Character
+- **Description:** Different types of risks that children may face, such as abduction/trafficking, forced recruitment, abandonment, exploitation, or GBV. The variable is a character string with responses from multiple risk categories, and some respondents provided combinations of risks.
+
+Notes:
+-Abduction/Trafficking
+-Forced recruitment,
+-Abandonment,
+-Exploitation,
+-GBV,
+-Other,
+-None    
+
+### Risk of Abduction/Trafficking
+- **Variable Name:** `Abduction_Trafficking`
+- **Type:** Numeric
+- **Description:** The risk of abduction or trafficking faced by children, as reported by the respondent.
+
+```{r}
+
+risk1_freq <- df_Sudan %>%
+  count(Abduction_Trafficking) %>%
+  mutate(
+    label = case_when(
+      Abduction_Trafficking == 1 ~ "Risk Identified",
+      Abduction_Trafficking == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Abduction_Trafficking, Label = label, Freq = n)
+
+kable(risk1_freq, format = "markdown")
+
+```
+
+### Risk of Abandonment
+- **Variable Name**: `Abandonment`
+- **Type**: Numeric
+- **Description**: The risk of children being abandoned by their caregivers or family members, as reported by the respondent.
+
+```{r}
+
+risk3_freq <- df_Sudan %>%
+  count(Abandonment) %>%
+  mutate(
+    label = case_when(
+      Abandonment == 1 ~ "Risk Identified",
+      Abandonment == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Abandonment, Label = label, Freq = n)
+
+kable(risk3_freq, format = "markdown")
+
+```
+
+### Risk of Forced Recruitment
+- **Variable Name**: `Forced_Recruitment`
+- **Type**: Numeric
+- **Description**: The risk of forced recruitment of children into armed groups or forces, as reported by the respondent.
+
+```{r}
+
+risk2_freq <- df_Sudan %>%
+  count(Forced_Recruitment) %>%
+  mutate(
+    label = case_when(
+      Forced_Recruitment == 1 ~ "Risk Identified",
+      Forced_Recruitment == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Forced_Recruitment, Label = label, Freq = n)
+
+kable(risk2_freq, format = "markdown")
+
+```
+
+### Risk of Exploitation
+- **Variable Name**: `Exploitation`
+- **Type**: Numeric
+- **Description**: The risk of exploitation of children, as reported by the respondent.
+
+```{r}
+
+risk4_freq <- df_Sudan %>%
+  count(Exploitation) %>%
+  mutate(
+    label = case_when(
+      Exploitation == 1 ~ "Risk Identified",
+      Exploitation == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Exploitation, Label = label, Freq = n)
+
+kable(risk4_freq, format = "markdown")
+
+```
+
+### Risk of Gender-Based Violence (GBV)
+- **Variable Name**: `GBV`
+- **Type**: Numeric
+- **Description**: The risk of gender-based violence (GBV), as reported by the respondent. 
+
+```{r}
+
+risk5_freq <- df_Sudan %>%
+  count(GBV) %>%
+  mutate(
+    label = case_when(
+      GBV == 1 ~ "Risk Identified",
+      GBV == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = GBV, Label = label, Freq = n)
+
+kable(risk5_freq, format = "markdown")
+
+```
+
+### Other Risks
+- **Variable Name**: `Other`
+- **Type**: Numeric
+- **Description**: The risks not covered by the other categories, as identified by the respondent.
+
+```{r}
+
+other_freq <- df_Sudan %>%
+  count(Other) %>%
+  mutate(
+    label = case_when(
+      Other == 1 ~ "Risk Identified",
+      Other == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Other, Label = label, Freq = n)
+
+kable(other_freq, format = "markdown")
+
+```
+
+### Risk of None
+- **Variable Name**: `None`
+- **Type**: Numeric
+- **Description**: Whether the respondent reported that there were no risks faced by children in their area. 
+
+```{r}
+
+none_freq <- df_Sudan %>%
+  count(None) %>%
+  mutate(
+    label = case_when(
+      None == 1 ~ "No Risks Identified",
+      None == 0 ~ "Risks Identified"
+    )
+  ) %>%
+  select(Value = None, Label = label, Freq = n)
+
+kable(none_freq, format = "markdown")
+
+```
+
+### Risk Response of "I choose not to answer"
+- **Variable Name**: `No_Answer`
+- **Type**: Numeric 
+- **Description**: Whether the respondent chose not to provide an answer regarding the risks children face.
+
+```{r}
+
+no_answer_freq <- df_Sudan %>%
+  count(No_Answer) %>%
+  mutate(
+    label = case_when(
+      No_Answer == 1 ~ "Response Not Given",
+      No_Answer == 0 ~ "Response Given"
+    )
+  ) %>%
+  select(Value = No_Answer, Label = label, Freq = n)
+
+kable(no_answer_freq, format = "markdown")
+
+```
+
+### Current School Attendance
+- **Variable Name:** children_current_school
+- **Type:** Numeric
+- **Description:** Whether the children in the household are currently attending school.
+
+```{r}
+
+current_school_freq <- df_Sudan %>% 
+  count(child_current_school) %>% 
+  mutate(
+    label = case_when(
+      child_current_school == 1 ~ "Yes",
+      child_current_school == 2 ~ "No",
+      child_current_school == 3 ~ "Some of them, but not all",
+      child_current_school == 4 ~ "I don’t have school-aged children",
+      TRUE ~ "Unknown"
+    ),
+    frequency = n
+  ) %>%
+  select(Value = child_current_school, Label = label, Freq = frequency)
+
+current_school_freq %>% 
+  kable(format = "markdown")
+
+```
+
+### Reasons for Not All Children Attending School
+- **Variable Name:** reason_not_all_in_school
+- **Type:** Character
+- **Description:** Respondents’ open-ended answers explaining why not all school-aged children in their household are attending school. Responses may include one or more reasons, such as inability to afford school fees, distance to school, child labor needs, or other personal or logistical barriers. Multiple responses may be recorded in a single entry.
+
+### Reason: Can’t Afford Fees / Scholastic Materials
+- **Variable Name:** `Reason_Fees`
+- **Type:** Numeric
+- **Description:** Indicates whether the respondent mentioned inability to afford fees or scholastic materials as a reason for not all children attending school.
+
+```{r}
+
+reason1_freq <- df_Sudan %>%
+  count(Reason_Fees) %>%
+  mutate(
+    label = case_when(
+      Reason_Fees == 1 ~ "Reason Mentioned",
+      Reason_Fees == 0 ~ "Not Mentioned"
+    )
+  ) %>%
+  select(Value = Reason_Fees, Label = label, Freq = n)
+
+kable(reason1_freq, format = "markdown")
+
+```
+
+### Reason: No School Nearby / Distance Too Far
+- **Variable Name:** `Reason_Distance`
+- **Type:** Numeric
+- **Description:** Indicates whether the respondent mentioned distance or lack of nearby schools as a reason for not all children attending school.
+
+```{r}
+
+reason2_freq <- df_Sudan %>%
+  count(Reason_Distance) %>%
+  mutate(
+    label = case_when(
+      Reason_Distance == 1 ~ "Reason Mentioned",
+      Reason_Distance == 0 ~ "Not Mentioned"
+    )
+  ) %>%
+  select(Value = Reason_Distance, Label = label, Freq = n)
+
+kable(reason2_freq, format = "markdown")
+
+```
+
+### Reason: Children Need to Work
+- **Variable Name:** `Reason_Work`
+- **Type:** Numeric
+- **Description:** Indicates whether the respondent mentioned the need for children to work as a reason for non-attendance.
+
+```{r}
+reason3_freq <- df_Sudan %>%
+  count(Reason_Work) %>%
+  mutate(
+    label = case_when(
+      Reason_Work == 1 ~ "Reason Mentioned",
+      Reason_Work == 0 ~ "Not Mentioned"
+    )
+  ) %>%
+  select(Value = Reason_Work, Label = label, Freq = n)
+
+kable(reason3_freq, format = "markdown")
+
+```
+
+### Reason: Other
+- **Variable Name:** `Reason_Other`
+- **Type:** Numeric
+- **Description:** Indicates whether the respondent selected “Other” as a reason for non-attendance, which may include personal, cultural, or unspecified reasons.
+
+```{r}
+reason4_freq <- df_Sudan %>%
+  count(Reason_Other) %>%
+  mutate(
+    label = case_when(
+      Reason_Other == 1 ~ "Reason Mentioned",
+      Reason_Other == 0 ~ "Not Mentioned"
+    )
+  ) %>%
+  select(Value = Reason_Other, Label = label, Freq = n)
+
+kable(reason4_freq, format = "markdown")
+
+```
+
+### Reason: Chose Not to Answer
+- **Variable Name:** `Reason_NoAnswer`
+- **Type:** Numeric
+- **Description:** Indicates whether the respondent selected “I choose not to answer” when asked why not all children were attending school.
+
+```{r}
+
+reason5_freq <- df_Sudan %>%
+  count(Reason_NoAnswer) %>%
+  mutate(
+    label = case_when(
+      Reason_NoAnswer == 1 ~ "Reason Mentioned",
+      Reason_NoAnswer == 0 ~ "Not Mentioned"
+    )
+  ) %>%
+  select(Value = Reason_NoAnswer, Label = label, Freq = n)
+
+kable(reason5_freq, format = "markdown")
+
+```
+
+### Protection Risks for Women and Girls
+- **Variable Name:** `risks_women_girls`
+- **Type:** Character
+- **Description:** Different types of risks faced by women and girls during reintegration such as abduction/trafficking, forced recruitment, abandonment, exploitation, or GBV. The variable is a character string with responses from multiple risk categories, and some respondents provided combinations of risks.
+
+### Risk of Abduction/Trafficking for Women and Girls
+- **Variable Name:** `Abduction_Trafficking_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that women and girls face a risk of abduction or trafficking.
+
+```{r}
+
+risk1_women_freq <- df_Sudan %>%
+  count(Abduction_Trafficking_women) %>%
+  mutate(
+    Label = case_when(
+      Abduction_Trafficking_women == 1 ~ "Risk Identified",
+      Abduction_Trafficking_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Abduction_Trafficking_women, Label, Freq = n)
+
+kable(risk1_women_freq, format = "markdown")
+
+```
+
+### Risk of Abandonment for Women and Girls
+- **Variable Name:** `Abandonment_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that women and girls face a risk of abandonment.
+
+```{r}
+
+risk2_women_freq <- df_Sudan %>%
+  count(Abandonment_women) %>%
+  mutate(
+    label = case_when(
+      Abandonment_women == 1 ~ "Risk Identified",
+      Abandonment_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Abandonment_women, Label = label, Freq = n)
+
+kable(risk2_women_freq, format = "markdown")
+
+```
+
+### Risk of Forced Recruitment for Women and Girls
+- **Variable Name:** `Forced_Recruitment_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that women and girls face a risk of recruitment into armed groups or forces.
+
+
+```{r}
+
+risk3_women_freq <- df_Sudan %>%
+  count(Forced_Recruitment_women) %>%
+  mutate(
+    label = case_when(
+      Forced_Recruitment_women == 1 ~ "Risk Identified",
+      Forced_Recruitment_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Forced_Recruitment_women, Label = label, Freq = n)
+
+kable(risk3_women_freq, format = "markdown")
+
+```
+
+### Risk of Exploitation for Women and Girls
+- **Variable Name:** `Exploitation_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that women and girls face a risk of exploitation.
+
+```{r}
+
+risk4_women_freq <- df_Sudan %>%
+  count(Exploitation_women) %>%
+  mutate(
+    label = case_when(
+      Exploitation_women == 1 ~ "Risk Identified",
+      Exploitation_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Exploitation_women, Label = label, Freq = n)
+
+kable(risk4_women_freq, format = "markdown")
+
+```
+
+### Risk of Gender-Based Violence (GBV) for Women and Girls
+- **Variable Name:** `GBV_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that women and girls face a risk of gender-based violence (GBV).
+
+```{r}
+
+risk5_women_freq <- df_Sudan %>%
+  count(GBV_women) %>%
+  mutate(
+    label = case_when(
+      GBV_women == 1 ~ "Risk Identified",
+      GBV_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = GBV_women, Label = label, Freq = n)
+
+kable(risk5_women_freq, format = "markdown")
+
+```
+
+### Other Risks for Women and Girls
+- **Variable Name:** `Other_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified any other risks not covered by the other categories for women and girls.
+
+```{r}
+other_women_freq <- df_Sudan %>%
+  count(Other_women) %>%
+  mutate(
+    label = case_when(
+      Other_women == 1 ~ "Risk Identified",
+      Other_women == 0 ~ "Risk Not Identified"
+    )
+  ) %>%
+  select(Value = Other_women, Label = label, Freq = n)
+
+kable(other_women_freq, format = "markdown")
+
+```
+
+### No Risks for Women and Girls
+- **Variable Name:** `None_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent identified that there were no risks faced by women and girls in their area.
+
+```{r}
+
+none_women_freq <- df_Sudan %>%
+  count(None_women) %>%
+  mutate(
+    label = case_when(
+      None_women == 1 ~ "No Risks Reported",
+      None_women == 0 ~ "Risks Reported"
+    )
+  ) %>%
+  select(Value = None_women, Label = label, Freq = n)
+
+kable(none_women_freq, format = "markdown")
+
+```
+
+### No Answer for Women and Girls
+- **Variable Name:** `No_Answer_women`
+- **Type:** Numeric
+- **Description:** Whether the respondent chose not to answer regarding the risks faced by women and girls.
+
+```{r}
+
+no_answer_women_freq <- df_Sudan %>%
+  count(No_Answer_women) %>%
+  mutate(
+    label = case_when(
+      No_Answer_women == 1 ~ "No Answer Provided",
+      No_Answer_women == 0 ~ "Answer Provided"
+    )
+  ) %>%
+  select(Value = No_Answer_women, Label = label, Freq = n)
+
+kable(no_answer_women_freq, format = "markdown")
+```
+
