@@ -4,9 +4,7 @@ Hello! My name is Erica Criollo and welcome to my portfolio.
 
 This repository showcases my work, including my analysis, code, and projects. Below is an overview of what you will find in this repo:
 
-## **Slide Deck**
-
-# Urban Greenspaces and Human Development Index (HDI)
+## **Urban Greenspaces and Human Development Index (HDI)**
 
 ## Overview
 This analysis explores the relationship between urban greenspaces and the Human Development Index (HDI). Specifically, it investigates whether cities in more developed countries (higher HDI) tend to have more urban greenspaces. Urban greenspaces are known to improve air quality, mental and physical health, and the overall quality of life for city dwellers.
