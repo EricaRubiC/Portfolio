@@ -1,8 +1,3 @@
-# Portfolio → main page title
-## Project 1 → project title
-### Overview → project sections
---- → visual separation between projects
-
 # Portfolio
 
 Hello! My name is Erica Criollo and welcome to my portfolio.
@@ -56,8 +51,6 @@ Key features of the dataset:
 - The refined dataset now includes variables such as school enrollment, food security, and child protection risks.
 - The analysis focuses on the educational attainment of girls during the reintegration process and the challenges they face.
 
-## **Exemplary Code Chunk**
-
 ## Afrobarometer Survey Analysis: Uganda (Round 9, June 2022)
 
 ### Overview
@@ -69,13 +62,13 @@ The research focuses on the political and economic perceptions of China and the 
 ### Data
 The data used in this analysis comes from the Afrobarometer survey in Uganda, Round 9 (June 2022). The dataset includes responses from a nationally representative sample, with key variables such as gender, age, urban/rural status, and questions on the influence of China and the U.S.
 
-[Afrobarometer Survey Data Source](https://www.afrobarometer.org/publication/uganda-round-9-summary-of-results/)
+[Data Source Link](https://www.afrobarometer.org/publication/uganda-round-9-summary-of-results/)
 
 ### Approach
-- **Data Preparation**: The dataset was filtered to include variables related to demographics (gender, age, urban/rural) and attitudes toward China and the U.S.
-- **Descriptive Statistics**: The distribution of gender, age, urban/rural status, and language were summarized to better understand the demographic makeup of the respondents.
-- **Attitudes Analysis**: Respondents' views on China and the U.S. were analyzed using frequency tables based on responses to questions Q78A (China) and Q78B (U.S.).
-- **T-Test**: A paired t-test was conducted to compare attitudes toward China and the U.S. The results show a statistically significant difference, indicating that respondents are generally more negative about China’s influence.
+- The dataset was filtered to include variables related to demographics (gender, age, urban/rural) and attitudes toward China and the U.S.
+- The distribution of gender, age, urban/rural status, and language were summarized to better understand the demographic makeup of the respondents.
+- Respondents' views on China and the U.S. were analyzed using frequency tables based on responses to questions Q78A (China) and Q78B (U.S.).
+- A paired t-test was conducted to compare attitudes toward China and the U.S. The results show a statistically significant difference, indicating that respondents are generally more negative about China’s influence.
 
 ### Results
 - The t-test results show a mean difference of -0.203, indicating a stronger negative sentiment toward China compared to the U.S.
@@ -84,4 +77,4 @@ The data used in this analysis comes from the Afrobarometer survey in Uganda, Ro
 ---
 Thank you for reviewing my portfolio. If you have any questions or concerns please reach out.
 
-#### 📧 Contact: [Email](mailto:ec1737a@american.edu)
+#### 📧 Contact: ericacriollo35@gmail.com
