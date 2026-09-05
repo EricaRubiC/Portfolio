@@ -27,9 +27,7 @@ The analysis:
 - Significant differences were found between countries' NDVI and HDI levels.
 - Cities with higher HDI generally have more urban greenspaces.
 
-## **Codebook**
-
-# Codebook: Returnee Integration to South Sudan and Educational Attainment for Girls
+## **Codebook: Returnee Integration to South Sudan and Educational Attainment for Girls**
 
 ## Overview
 This project focuses on analyzing the reintegration experiences of South Sudanese returnees, particularly the experiences of girls, after returning from Sudan. The dataset derived from the *Sudan Crisis – Returnee Reintegration & Perceptions Survey* conducted by the International Organization for Migration (IOM) in March 2024, provides insights into the challenges and risks faced by returnees, with a specific focus on education access and vulnerabilities faced by girls.
