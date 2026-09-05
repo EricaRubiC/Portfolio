@@ -1,3 +1,8 @@
+# Portfolio → main page title
+## Project 1 → project title
+### Overview → project sections
+--- → visual separation between projects
+
 # Portfolio
 
 Hello! My name is Erica Criollo and welcome to my portfolio.
