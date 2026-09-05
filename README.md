@@ -11,24 +11,24 @@ This repository showcases my work, including my analysis, code, and projects. Be
 
 ## **Urban Greenspaces and Human Development Index (HDI)**
 
-## Overview
+### Overview
 This analysis explores the relationship between urban greenspaces and the Human Development Index (HDI). Specifically, it investigates whether cities in more developed countries (higher HDI) tend to have more urban greenspaces. Urban greenspaces are known to improve air quality, mental and physical health, and the overall quality of life for city dwellers.
 
-## Research Topic
+### Research Topic
 The project examines how urban greenspaces, measured using the Normalized Difference Vegetation Index (NDVI), correlate with HDI levels in cities worldwide. NDVI values are used to quantify the amount of vegetation in a given urban area, and the analysis aims to understand whether higher HDI cities tend to provide more green space for residents.
 
-## Data
+### Data
 The analysis uses the **Global Greenspace Indicator Dataset** by Jennifer Stowell from Boston University. The dataset provides information on greenspace extent in over 1,000 cities from 2010 to 2021, measured using NDVI (Normalized Difference Vegetation Index). NDVI values range from 0 to 1, with higher values indicating more vegetation. 
 
 [Dataset Source Link](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/TMWYHB)
 
-## Approach
+### Approach
 The analysis:
 - Examines the relationship between NDVI values and HDI across cities.
 - Visualizes data to compare greenspace availability in cities with varying HDI levels.
 - Investigates trends showing whether higher HDI cities tend to have more urban greenspaces.
 
-## Results
+### Results
 - Significant differences were found between countries' NDVI and HDI levels.
 - Cities with higher HDI generally have more urban greenspaces.
 
