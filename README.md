@@ -15,7 +15,7 @@ The project examines how urban greenspaces, measured using the Normalized Differ
 ## Data
 The analysis uses the **Global Greenspace Indicator Dataset** by Jennifer Stowell from Boston University. The dataset provides information on greenspace extent in over 1,000 cities from 2010 to 2021, measured using NDVI (Normalized Difference Vegetation Index). NDVI values range from 0 to 1, with higher values indicating more vegetation. 
 
-[Dataset Source Link](https://www.bu.edu/) *(Replace with actual source link)*
+[Dataset Source Link](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/TMWYHB)
 
 ## Approach
 The analysis:
